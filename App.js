@@ -23,6 +23,9 @@ import RegisterScreen from './src/screens/Auth/RegisterScreen';
 import VerificationScreen from './src/screens/Auth/VerificationScreen';
 import SplashScreen from './src/screens/SplashScreen';
 
+import {Router} from './src/routes/Router';
+import { AuthProvider } from './src/context/Auth'
+
 const navigator = createAppContainer(
   createSwitchNavigator({
     LoadingScreen: LoadingScreen,
@@ -70,9 +73,15 @@ const navigator = createAppContainer(
 const App = navigator;
 
 export default () => {
-  return <SafeAreaProvider>
-    <App />
-  </SafeAreaProvider>
+  
+  return (
+    <AuthProvider>
+      <SafeAreaProvider>
+        <Router />
+      </SafeAreaProvider>
+    </AuthProvider>
+
+  )
 }
 //console.ignoredYellowBox = ['Calling getNode()']
 
