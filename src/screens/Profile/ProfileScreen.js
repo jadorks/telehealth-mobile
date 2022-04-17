@@ -7,12 +7,14 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
 import Dialog from "react-native-dialog";
+import { useAuth } from "../../context/Auth";
 
 const { width } = Dimensions.get('screen');
 
 const ProfileScreen = ({ navigation }) => {
 
     const [isLogout, setIsLogout] = useState(false);
+    const auth = useAuth();
 
     function userInfo() {
         return (
@@ -109,9 +111,11 @@ const ProfileScreen = ({ navigation }) => {
                             <Text style={{ ...Fonts.black20Regular }}>Cancel</Text>
                         </TouchableOpacity>
                         <TouchableOpacity activeOpacity={0.9}
-                            onPress={() => {
-                                setIsLogout(false)
-                                navigation.navigate('Welcome')
+                            onPress={async () => {
+                                // setIsLogout(false)
+                                // navigation.navigate('Welcome')
+                                await auth.signOut();
+                                navigation.navigate('Welcome');
                             }}
                             style={styles.logOutButtonStyle}
                         >

@@ -2,11 +2,12 @@ import React, {createContext, useState, useContext, useEffect} from 'react';
 import * as SecureStore from 'expo-secure-store';
 import * as Font from "expo-font";
 
-import { AuthData, registerPatient } from '../api/authentication';
+import { AuthData, loginPatient, registerPatient } from '../api/authentication';
 
 type AuthContextData = {
     authData?: AuthData;
     loading: boolean;
+    signIn(user_data): Promise<void>;
     signUp(user_data): Promise<void>;
     signOut(): void;
 }
@@ -45,8 +46,23 @@ const AuthProvider: React.FC = ({children}) => {
     const signUp = async (user_data) => {
 
         const _authData = await registerPatient(user_data);
-        setAuthData(_authData);
-        SecureStore.setItemAsync('AuthData', JSON.stringify(_authData));
+        if(_authData){
+            setAuthData(_authData);
+            SecureStore.setItemAsync('AuthData', JSON.stringify(_authData));
+        }else{
+            setAuthData(undefined)
+        }
+        
+    }
+
+    const signIn =async (user_data) => {
+        const _authData = await loginPatient(user_data);
+        if(_authData){
+            setAuthData(_authData);
+            SecureStore.setItemAsync('AuthData', JSON.stringify(_authData));
+        }else{
+            setAuthData(undefined);
+        }
     }
 
     const signOut = async () => {
@@ -55,7 +71,7 @@ const AuthProvider: React.FC = ({children}) => {
     };
 
     return(
-        <AuthContext.Provider value={{authData, loading, signUp, signOut}}>
+        <AuthContext.Provider value={{authData, loading, signIn, signUp, signOut}}>
             {children}
         </AuthContext.Provider>
     );
