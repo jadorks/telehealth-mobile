@@ -10,7 +10,7 @@ const { width } = Dimensions.get('screen');
 
 const SpecialistScreen = ({ navigation }) => {
 
-    const type = navigation.getParam('name');
+    const type = 'Doc';
 
     const doctorsList = [
         {
@@ -93,7 +93,7 @@ const SpecialistScreen = ({ navigation }) => {
                 <Ionicons name="search" size={24} color="gray" />
                 <View style={{ flex: 1 }}>
                     <TextInput
-                        placeholder={`Search ${type}`}
+                        placeholder={`Search Doctors`}
                         style={{ ...Fonts.gray17Regular, marginLeft: Sizes.fixPadding, }}
                     />
                 </View>
@@ -106,64 +106,29 @@ const SpecialistScreen = ({ navigation }) => {
         const renderItem = ({ item }) => {
             return (
                 <View style={{ justifyContent: 'center', marginTop: 15.0, }}>
-                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }} onPress={()=>navigation.navigate("DoctorProfile")}>
                         <View style={styles.doctorImageContainerStyle}>
                             <Image
                                 source={item.image}
                                 resizeMode="contain"
                                 style={{
-                                    height: 109.0, width: 109.0, borderRadius: 75.0,
+                                    height: 49, width: 49, borderRadius: 75.0,
                                     overflow: 'hidden',
                                 }}
                             />
                         </View>
                         <View>
                             <Text style={{ ...Fonts.black16Bold }}>{item.name}</Text>
-                            <Text style={{ ...Fonts.gray17Regular, marginTop: Sizes.fixPadding - 7.0 }}>{type}</Text>
-                            <Text style={{ ...Fonts.primaryColor16Regular, marginTop: Sizes.fixPadding - 7.0 }}>
-                                {item.yearsOfExperience} Years Experience
-                            </Text>
+
+                            <Text style={{ ...Fonts.grayRegular, marginTop: Sizes.fixPadding - 7.0 }}>{type}</Text>
                             <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: Sizes.fixPadding - 7.0 }}>
                                 <FontAwesome name="star" size={20} color="#CDDC39" />
                                 <Text style={{ ...Fonts.black16Regular, marginLeft: Sizes.fixPadding, marginRight: Sizes.fixPadding * 2.0 }}>
                                     {item.rating}
                                 </Text>
-                                <MaterialIcons name="rate-review" size={24} color="gray" />
-                                <Text style={{ ...Fonts.black16Regular, marginLeft: Sizes.fixPadding }}>
-                                    {item.reviews} Reviews
-                                </Text>
                             </View>
                         </View>
-                    </View>
-
-
-                    <View style={styles.bookContainerStyle}>
-                        <TouchableOpacity onPress={() => navigation.navigate('TimeSlots', {
-                            image: item.image,
-                            name: item.name,
-                            type: type,
-                            experience: item.yearsOfExperience,
-                            rating: item.rating,
-                        })}>
-                            <View style={styles.bookVideoConsultButtonStyle}>
-                                <Text style={{ ...Fonts.orangeColorBold }}>Book Video Consult</Text>
-                            </View>
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={() => navigation.navigate('TimeSlots', {
-                            image: item.image,
-                            name: item.name,
-                            type: type,
-                            experience: item.yearsOfExperience,
-                            rating: item.rating,
-                        })}>
-                            <View style={styles.bookAppointmentButtonStyle}>
-                                <Text style={{ ...Fonts.primaryColorBold }}>Book Appointment</Text>
-                            </View>
-                        </TouchableOpacity>
-                    </View>
-
-
-
+                    </TouchableOpacity>
                     <View style={styles.dividerStyle}>
                     </View>
                 </View>
@@ -184,7 +149,6 @@ const SpecialistScreen = ({ navigation }) => {
     return <SafeAreaView style={{ flex: 1, }} backgroundColor="rgba(0,0,0,0)">
         <StatusBar backgroundColor={Colors.primary} />
         <View style={{ flex: 1, backgroundColor: 'white' }}>
-            {header()}
             {search()}
             {doctors()}
         </View>
@@ -215,8 +179,8 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     doctorImageContainerStyle: {
-        height: 110.0,
-        width: 110.0,
+        height: 50.0,
+        width: 50.0,
         borderRadius: 75.0,
         backgroundColor: 'white',
         borderColor: '#B3BCFC',
@@ -258,8 +222,8 @@ const styles = StyleSheet.create({
     dividerStyle: {
         backgroundColor: Colors.lightGray,
         height: 0.80,
-        marginTop: Sizes.fixPadding * 2.0,
-        marginHorizontal: Sizes.fixPadding * 2.0
+        marginTop: Sizes.fixPadding * 1.0,
+        marginHorizontal: Sizes.fixPadding * 1.0
     }
 })
 

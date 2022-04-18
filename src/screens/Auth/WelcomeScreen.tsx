@@ -67,7 +67,7 @@ const WelcomeScreen = ({ navigation }) => {
             backgroundColor: "rgba(255,255,255,0.25)",
             // opacity: 0.25,
             borderRadius: 25.0,
-            marginTop: Sizes.fixPadding * 5.0,
+            marginTop: Sizes.fixPadding * 2.0,
             paddingVertical: Sizes.fixPadding + 3.0,
             paddingHorizontal: 25.0,
           }}

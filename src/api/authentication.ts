@@ -14,6 +14,11 @@ export type AuthData = {
   user: PatientInfo;
 };
 
+export type ErrorInfo = {
+  error: string;
+  status: Number;
+}
+
 export const registerPatient = async (user_data): Promise<AuthData> => {
   const user = await client
     .post("users/patients/register", user_data)
@@ -22,7 +27,13 @@ export const registerPatient = async (user_data): Promise<AuthData> => {
       return _data;
     })
     .catch((error) => {
-      console.log(error.response.data);
+      if(error.response){
+        console.log(error.response.data);
+      } else if(error.request){
+        console.log(error.request);
+      } else {
+        console.log('Error', error.messsage)
+      }
       return null;
     });
 
@@ -37,7 +48,13 @@ export const loginPatient = async (user_data): Promise<AuthData> => {
       return _data;
     })
     .catch((error) => {
-      console.log(error.response.data);
+      if(error.response){
+        console.log(error.response.data);
+      } else if(error.request){
+        console.log(error.request);
+      } else {
+        console.log('Error', error.messsage)
+      }
       return null;
     });
   return user;

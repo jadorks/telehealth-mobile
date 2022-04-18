@@ -136,63 +136,25 @@ const ProfileScreen = ({ navigation }) => {
             <TouchableOpacity activeOpacity={0.9} onPress={() => navigation.navigate('PatientDirectory')}>
                 {infoAll(
                     {
-                        icon: <Ionicons name="person" size={20} color={Colors.primary} />,
-                        backColor: '#E9EBFE',
-                        frontColor: Colors.primary,
-                        title: 'Patient Directory',
+                        icon: <FontAwesome5 name="clipboard-list" size={20} color='#F44336' />,
+                        backColor: '#FDE3E1',
+                        frontColor: '#F44336',
+                        title: 'Medical Records',
 
                     }
                 )}
             </TouchableOpacity>
-            {infoAll(
-                {
-                    icon: <FontAwesome5 name="clipboard-list" size={20} color='#F44336' />,
-                    backColor: '#FDE3E1',
-                    frontColor: '#F44336',
-                    title: 'My History',
-
-                }
-            )}
-            {shortDivider()}
-            {title({ title: 'About App' })}
-            {infoAll(
-                {
-                    icon: <FontAwesome name="tag" size={24} color='#FF9800' />,
-                    backColor: '#FFF0D9',
-                    frontColor: '#FF9800',
-                    title: 'Coupen Codes',
-
-                }
-            )}
             <TouchableOpacity activeOpacity={0.9} onPress={() => navigation.navigate('AboutUs')}>
                 {infoAll(
                     {
                         icon: <MaterialCommunityIcons name="hand-pointing-up" size={29} color={Colors.primary} />,
                         backColor: '#E9EBFE',
                         frontColor: Colors.primary,
-                        title: 'About Us',
+                        title: 'About',
                     }
                 )}
             </TouchableOpacity>
-            {infoAll(
-                {
-                    icon: <Ionicons name="star-outline" size={20} color="#60B864" />,
-                    backColor: '#E4F3E5',
-                    frontColor: '#60B864',
-                    title: 'Rate Us',
-                }
-            )}
-            {infoAll(
-                {
-                    icon: <Ionicons name="md-help-circle-outline" size={29} color='#F44336' />,
-                    backColor: '#FDE3E1',
-                    frontColor: '#F44336',
-                    title: 'Help',
-                }
-            )}
-            {shortDivider()}
             <TouchableOpacity
-                style={{ marginTop: Sizes.fixPadding }}
                 activeOpacity={0.9}
                 onPress={() => setIsLogout(true)}
             >

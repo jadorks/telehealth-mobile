@@ -28,14 +28,14 @@ export const AppStack = () => {
     return(
         <Stack.Navigator>
             <Stack.Screen name="BottomTabScreen" component={BottomTabScreen} options={{headerShown: false}} />
-            <Stack.Screen name="Notification" component={NotificationScreen} />
+            <Stack.Screen name="Notifications" component={NotificationScreen} />
             <Stack.Screen name="Search" component={SearchScreen} />
             <Stack.Screen name="ViewAll" component={ViewAllScreen} />
-            <Stack.Screen name="Specialist" component={SpecialistScreen} />
+            <Stack.Screen name="Specialist" component={SpecialistScreen} options={{headerShown: false}}/>
             <Stack.Screen name="TimeSlots" component={TimeSlotScreen} />
             <Stack.Screen name="Consultation" component={ConsultaionScreen} />
             <Stack.Screen name="PaymentMethod" component={PaymentMethodScreen} />
-            <Stack.Screen name="DoctorProfile" component={DoctorProfileScreen} />
+            <Stack.Screen name="DoctorProfile" component={DoctorProfileScreen} options={{headerShown: false}}/>
             <Stack.Screen name="Review" component={ReviewScreen} />
             <Stack.Screen name="LabTestAndCheckUp" component={LabTestAndHealthCheckUpScreen} />
             <Stack.Screen name="Message" component={MessageScreen} />

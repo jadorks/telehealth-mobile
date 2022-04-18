@@ -10,12 +10,12 @@ const { width } = Dimensions.get('screen');
 
 const ConsultaionScreen = ({ navigation }) => {
 
-    const image = navigation.getParam('image');
-    const name = navigation.getParam('name');
-    const experience = navigation.getParam('experience');
-    const type = navigation.getParam('type');
-    const slot = navigation.getParam('selectedSlot');
-    const rating = navigation.getParam('rating');
+    const image = require("../../assets/images/doctor/doctor-1.png");
+    const name = "Larry Ellison";
+    const experience = 8;
+    const type = "Psychologist";
+    const slot = '';
+    const rating = 4.8;
 
     const patientLit = [
         {

@@ -10,6 +10,7 @@ import { Entypo } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
+import SpecialistScreen from "../screens/Specialist/SpecialistScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -55,17 +56,17 @@ const TabNavigator = () => {
         }}
       />
       <Tab.Screen
-        name="Chat"
-        component={ChatScreen}
+        name="Specialist"
+        component={SpecialistScreen}
         options={{
           tabBarLabel: "Chat",
           tabBarIcon: ({ tintColor, focused }) =>
             focused ? (
               <TouchableOpacity style={styles.circleStyle}>
-                <MaterialIcons name="chat" size={24} color={tintColor} />
+                <MaterialIcons name="medical-services" size={24} color={tintColor} />
               </TouchableOpacity>
             ) : (
-              <MaterialIcons name="chat" size={24} color={tintColor} />
+              <MaterialIcons name="medical-services" size={24} color={tintColor} />
             ),
         }}
       />
