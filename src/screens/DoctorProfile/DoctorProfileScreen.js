@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import {
   Text,
   View,
@@ -14,41 +14,40 @@ import { Fonts, Colors, Sizes } from "../../constant/styles";
 import MapView, { Marker } from "react-native-maps";
 import { TouchableOpacity as RNGHTouchableOpacity } from "react-native-gesture-handler";
 import BottomSheet from "reanimated-bottom-sheet";
+import { getDoctor } from "../../api/doctors";
 
 const { height } = Dimensions.get("screen");
 
-const userList = [
-  {
-    id: "1",
-    image: require("../../assets/images/user/user_1.jpg"),
-    name: "Ersel",
-    date: "August 2020",
-    review: "Really good doctor.",
-  },
-  {
-    id: "2",
-    image: require("../../assets/images/user/user_2.jpg"),
-    name: "Jane",
-    date: "August 2020",
-    review: "Great doctor i have ever seen.",
-  },
-  {
-    id: "3",
-    image: require("../../assets/images/user/user_3.jpg"),
-    name: "Apollonia",
-    date: "July 2020",
-    review: "Excellent",
-  },
-];
-
 const { width } = Dimensions.get("screen");
 
-const DoctorProfileScreen = ({ navigation }) => {
-  const name = "Larry Ellison";
-  const type = "Psychologist";
-  const image = require("../../assets/images/doctor/doctor-1.png");
-  const rating = 4.9;
-  const experience = 8;
+const DoctorProfileScreen = ({ route, navigation }) => {
+  const image = require("../../assets/images/placeholder/user.png");
+
+  const [doctor, setDoctor] = useState({
+    bio: '',
+    doctor: {
+      first_name: '',
+      last_name: ''
+    },
+    specialty: ''
+  });
+
+  useEffect(() => {
+    async function loadDoctorInfo(){
+      if(route.params?.doctorId){
+        const doc = await getDoctor(route.params?.doctorId);
+        setDoctor(doc);
+      }
+      else{
+        navigation.navigate('BottomTabScreen');
+      }
+    }
+
+    loadDoctorInfo();
+  }, [])
+  
+
+
 
   function backArrow() {
     return (
@@ -77,7 +76,7 @@ const DoctorProfileScreen = ({ navigation }) => {
           }}
         >
           <Text numberOfLines={2} style={{ ...Fonts.white17Bold }}>
-            {name}
+            {`${doctor?.doctor?.first_name} ${doctor?.doctor?.last_name}`}
           </Text>
           <Text
             style={{
@@ -85,16 +84,8 @@ const DoctorProfileScreen = ({ navigation }) => {
               marginVertical: Sizes.fixPadding,
             }}
           >
-            {type}
+            {doctor?.specialty}
           </Text>
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <FontAwesome name="star" size={20} color="#CDDC39" />
-            <Text
-              style={{ ...Fonts.white16Regular, marginLeft: Sizes.fixPadding }}
-            >
-              {rating} Rating
-            </Text>
-          </View>
         </View>
 
         <View style={{ position: "absolute", right: 20.0 }}>
@@ -181,17 +172,10 @@ const DoctorProfileScreen = ({ navigation }) => {
         <Text
           style={{ ...Fonts.gray15Regular, marginBottom: Sizes.fixPadding }}
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec quis
-          tincidunt velit. Proin felis leo, porttitor at sollicitudin vel,
-          lacinia vel libero. Etiam iaculis dui felis, in faucibus felis varius
-          vitae. Nunc a laoreet justo.
+          {doctor?.bio}
         </Text>
-        {titleInfo({ title: "Specialty" })}
-        {descriptionInfo({ description: `${experience} Years` })}
-        {titleInfo({ title: "Availability" })}
-        {descriptionInfo({ description: "8:00 AM - 10:30PM" })}
       </View>
-      <RNGHTouchableOpacity onPress={() => navigation.push("TimeSlots")}>
+      <RNGHTouchableOpacity onPress={() => navigation.push("TimeSlots", {doctorId: route.params?.doctorId})}>
         <View
           style={{
             height: 47.0,

@@ -1,7 +1,8 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import CalendarStrip from 'react-native-calendar-strip';
 import { Text, View, TouchableOpacity, StatusBar, Image, FlatList, StyleSheet, Dimensions } from "react-native";
 import { Fonts, Colors, Sizes } from "../../constant/styles";
+import { getDoctor } from "../../api/doctors";
 
 const morningSlots = ["8:00", "8:30", "9:00", "9:30", "10:00", "10:30", "11:00", "11:30"];
 
@@ -11,9 +12,9 @@ const eveningSlots = ["8:00", "8:30", "9:00", "9:30", "10:00", "10:30"];
 
 const { width } = Dimensions.get('screen');
 
-const TimeSlotScreen = ({ navigation }) => {
+const TimeSlotScreen = ({ route, navigation }) => {
 
-    const image = require("../../assets/images/doctor/doctor-1.png");
+    const image = require("../../assets/images/placeholder/user.png");
     const name = "Larry Ellison";
     const experience = 8;
     const type = "Psychologist";
@@ -21,7 +22,30 @@ const TimeSlotScreen = ({ navigation }) => {
 
     const [selectedSlot, setSelectedSlot] = React.useState('');
 
+    const [doctor, setDoctor] = useState({
+        bio: '',
+        doctor: {
+          first_name: '',
+          last_name: ''
+        },
+        specialty: ''
+      });
+
     const [book, setBook] = React.useState(false);
+
+    useEffect(() => {
+        async function loadDoctorInfo(){
+          if(route.params?.doctorId){
+            const doc = await getDoctor(route.params?.doctorId);
+            setDoctor(doc);
+          }
+          else{
+            navigation.navigate('BottomTabScreen');
+          }
+        }
+    
+        loadDoctorInfo();
+      }, [])
 
     function doctorInfo() {
 
@@ -45,20 +69,10 @@ const TimeSlotScreen = ({ navigation }) => {
                         width: width - 140.0,
                     }}>
                         <View style={{ width: width / 3.0, }}>
-                            <Text style={{ ...Fonts.black16Bold, }}>{name}</Text>
+                            <Text style={{ ...Fonts.black16Bold, }}>{`${doctor?.doctor?.first_name} ${doctor?.doctor?.last_name}`}</Text>
                         </View>
-                        <TouchableOpacity
-                            onPress={() => navigation.navigate('DoctorProfile', {
-                                image, name, type, rating, experience
-                            })}>
-                            <Text style={{ ...Fonts.primaryColor13Bold }}>View Profile</Text>
-                        </TouchableOpacity>
                     </View>
-                    <Text style={{ ...Fonts.gray17Regular, marginTop: Sizes.fixPadding - 7.0 }}>{type}</Text>
-                    <Text style={{ ...Fonts.primaryColor16Regular, marginTop: Sizes.fixPadding - 7.0 }}>
-                        {experience} Years Experience
-                    </Text>
-                    <Text style={{ ...Fonts.black20Bold, marginTop: Sizes.fixPadding - 2.0 }}>$39</Text>
+                    <Text style={{ ...Fonts.gray17Regular, marginTop: Sizes.fixPadding - 7.0 }}>{doctor?.specialty}</Text>
                 </View>
             </View>
         )

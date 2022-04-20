@@ -143,8 +143,9 @@ const HomeScreen = ({ navigation }) => {
                 {title}
             </Text>
             <Text
+                onPress={()=> navigation.navigate('Schedule')}
                 style={{
-                ...Fonts.blackBold,
+                ...Fonts.primaryColorBold,
                 marginVertical: Sizes.fixPadding * 1.3,
                 marginHorizontal: Sizes.fixPadding * 2.0,
                 }}

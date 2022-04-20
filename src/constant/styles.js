@@ -31,21 +31,21 @@ export const Fonts = {
     gray16Regular: { fontFamily: 'NotoSans_Regular', color: 'gray', fontSize: 16.0 },
     gray17Regular: { fontFamily: 'NotoSans_Regular', color: 'gray', fontSize: 17.0 },
 
-    primaryColorRegular: { fontFamily: 'NotoSans_Regular', color: '#6979F8' },
-    primaryColor16Regular: { fontFamily: 'NotoSans_Regular', color: '#6979F8', fontSize: 16.0 },
+    primaryColorRegular: { fontFamily: 'NotoSans_Regular', color: '#0094c4' },
+    primaryColor16Regular: { fontFamily: 'NotoSans_Regular', color: '#0094c4', fontSize: 16.0 },
 
-    primaryColor13Bold: { fontFamily: 'NotoSans_Bold', color: '#6979F8', fontSize: 13.0 },
-    primaryColor17Bold: { fontFamily: 'NotoSans_Bold', color: '#6979F8', fontSize: 17.0 },
-    primaryColor20Bold: { fontFamily: 'NotoSans_Bold', color: '#6979F8', fontSize: 20.0 },
+    primaryColor13Bold: { fontFamily: 'NotoSans_Bold', color: '#0094c4', fontSize: 13.0 },
+    primaryColor17Bold: { fontFamily: 'NotoSans_Bold', color: '#0094c4', fontSize: 17.0 },
+    primaryColor20Bold: { fontFamily: 'NotoSans_Bold', color: '#0094c4', fontSize: 20.0 },
 
-    primaryColorBold: { fontFamily: 'NotoSans_Bold', color: '#6979F8' },
+    primaryColorBold: { fontFamily: 'NotoSans_Bold', color: '#0094c4' },
 
     orangeColorBold: { fontFamily: 'NotoSans_Bold', color: '#FF9B07' },
 
 }
 
 export const Colors = {
-    primary: '#6979F8',
+    primary: '#0094c4',
     lightGray: '#DBDBDB',
 }
 

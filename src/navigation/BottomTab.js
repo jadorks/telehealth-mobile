@@ -17,12 +17,15 @@ const Tab = createBottomTabNavigator();
 const TabNavigator = () => {
   return (
     <Tab.Navigator
-      initialRouteName="home"
       tabBarOptions={{
         showLabel: false,
-        activeTintColor: "#6979F8",
-        style: { height: 70.0, elevation: 0.0, borderTopWidth: 0 },
-        barStyle: { backgroundColor: 'white' },
+        activeTintColor: '#0094c4',
+        style: {
+          height: 70.0,
+          elevation: 0,
+          borderTopWidth: 0,
+          backgroundColor: 'white',
+        }
       }}
     >
       <Tab.Screen
@@ -30,13 +33,13 @@ const TabNavigator = () => {
         component={HomeScreen}
         options={{
           header: () => null,
-          tabBarIcon: ({ tintColor, focused }) =>
+          tabBarIcon: ({ color, focused }) =>
             focused ? (
               <TouchableOpacity style={styles.circleStyle}>
-                <Entypo name="home" size={24} color={tintColor} />
+                <Entypo name="home" size={24} color={color} />
               </TouchableOpacity>
             ) : (
-              <Entypo name="home" size={24} color={tintColor} />
+              <Entypo name="home" size={24} color={color} />
             ),
         }}
       />
@@ -45,13 +48,13 @@ const TabNavigator = () => {
         component={ScheduleScreen}
         options={{
           tabBarLabel: "Schedule",
-          tabBarIcon: ({ tintColor, focused }) =>
+          tabBarIcon: ({ color, focused }) =>
             focused ? (
               <TouchableOpacity style={styles.circleStyle}>
-                <FontAwesome5 name="calendar-alt" size={24} color={tintColor} />
+                <FontAwesome5 name="calendar-alt" size={24} color={color} />
               </TouchableOpacity>
             ) : (
-              <FontAwesome5 name="calendar-alt" size={24} color={tintColor} />
+              <FontAwesome5 name="calendar-alt" size={24} color={color} />
             ),
         }}
       />
@@ -60,13 +63,21 @@ const TabNavigator = () => {
         component={SpecialistScreen}
         options={{
           tabBarLabel: "Chat",
-          tabBarIcon: ({ tintColor, focused }) =>
+          tabBarIcon: ({ color, focused }) =>
             focused ? (
               <TouchableOpacity style={styles.circleStyle}>
-                <MaterialIcons name="medical-services" size={24} color={tintColor} />
+                <MaterialIcons
+                  name="medical-services"
+                  size={24}
+                  color={color}
+                />
               </TouchableOpacity>
             ) : (
-              <MaterialIcons name="medical-services" size={24} color={tintColor} />
+              <MaterialIcons
+                name="medical-services"
+                size={24}
+                color={color}
+              />
             ),
         }}
       />
@@ -76,13 +87,13 @@ const TabNavigator = () => {
         options={{
           header: () => null,
           tabBarLabel: "Profile",
-          tabBarIcon: ({ tintColor, focused }) =>
+          tabBarIcon: ({ color, focused }) =>
             focused ? (
               <TouchableOpacity style={styles.circleStyle}>
-                <Ionicons name="person" size={24} color={tintColor} />
+                <Ionicons name="person" size={24} color={color} />
               </TouchableOpacity>
             ) : (
-              <Ionicons name="person" size={24} color={tintColor} />
+              <Ionicons name="person" size={24} color={color} />
             ),
         }}
       />
@@ -91,6 +102,7 @@ const TabNavigator = () => {
 };
 
 export default TabNavigator;
+
 
 // const TabNavigator = createAppContainer(
 //     createBottomTabNavigator(
