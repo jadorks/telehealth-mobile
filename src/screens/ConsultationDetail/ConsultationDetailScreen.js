@@ -5,10 +5,12 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
 import { TransitionPresets } from 'react-navigation-stack';
+import moment from "moment";
+
 
 const { width } = Dimensions.get('screen');
 
-const ConsultaionScreen = ({ navigation }) => {
+const ConsultaionScreen = ({ route, navigation }) => {
 
     const image = require("../../assets/images/doctor/doctor-1.png");
     const name = "Larry Ellison";
@@ -16,6 +18,12 @@ const ConsultaionScreen = ({ navigation }) => {
     const type = "Psychologist";
     const slot = '';
     const rating = 4.8;
+
+    const doctor = route.params?.doctor;
+    const sslot = route.params?.slot;
+
+    console.log(doctor);
+    console.log(sslot);
 
     const patientLit = [
         {
@@ -53,20 +61,10 @@ const ConsultaionScreen = ({ navigation }) => {
                         width: width - 140.0,
                     }}>
                         <View style={{ width: width / 3.0, }}>
-                            <Text style={{ ...Fonts.black16Bold, }}>{name}</Text>
+                            <Text style={{ ...Fonts.black16Bold, }}>{`${doctor.doctor.first_name} ${doctor.doctor.last_name}`}</Text>
                         </View>
-                        <TouchableOpacity
-                            onPress={() => navigation.navigate('DoctorProfile', {
-                                image, name, type, rating, experience
-                            })}>
-                            <Text style={{ ...Fonts.primaryColor13Bold }}>View Profile</Text>
-                        </TouchableOpacity>
                     </View>
-                    <Text style={{ ...Fonts.gray17Regular, marginTop: Sizes.fixPadding - 7.0 }}>{type}</Text>
-                    <Text style={{ ...Fonts.primaryColor16Regular, marginTop: Sizes.fixPadding - 7.0 }}>
-                        {experience} Years Experience
-                    </Text>
-                    <Text style={{ ...Fonts.black20Bold, marginTop: Sizes.fixPadding - 2.0 }}>$39</Text>
+                    <Text style={{ ...Fonts.gray17Regular, marginTop: Sizes.fixPadding - 7.0 }}>{doctor.specialty}</Text>
                 </View>
             </View>
         )
@@ -83,11 +81,11 @@ const ConsultaionScreen = ({ navigation }) => {
             <View style={styles.dateAndTimeContainerStyle}>
                 <View style={{ flexDirection: 'row', alignItems: 'center', }}>
                     <FontAwesome5 name="calendar-alt" size={16} color="gray" />
-                    <Text style={{ ...Fonts.black16Regular, marginLeft: Sizes.fixPadding + 5.0 }}>28-June</Text>
+                    <Text style={{ ...Fonts.black16Regular, marginLeft: Sizes.fixPadding + 5.0 }}>{moment(slot.start_time).format("YYYY-MM-DD")}</Text>
                 </View>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                     <MaterialIcons name="access-time" size={18} color="gray" />
-                    <Text style={{ ...Fonts.black16Regular, marginLeft: Sizes.fixPadding }}>{slot}</Text>
+                    <Text style={{ ...Fonts.black16Regular, marginLeft: Sizes.fixPadding }}>{moment(slot.start_time).format("h:mm A")}</Text>
                 </View>
             </View>
         )

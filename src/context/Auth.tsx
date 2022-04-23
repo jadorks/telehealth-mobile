@@ -48,18 +48,18 @@ const AuthProvider: React.FC = ({children}) => {
         const _authData = await registerPatient(user_data);
         if(_authData){
             setAuthData(_authData);
-            SecureStore.setItemAsync('AuthData', JSON.stringify(_authData));
+            await SecureStore.setItemAsync('AuthData', JSON.stringify(_authData));
         }else{
             setAuthData(undefined)
         }
         
     }
 
-    const signIn =async (user_data) => {
+    const signIn = async (user_data) => {
         const _authData = await loginPatient(user_data);
         if(_authData){
             setAuthData(_authData);
-            SecureStore.setItemAsync('AuthData', JSON.stringify(_authData));
+            await SecureStore.setItemAsync('AuthData', JSON.stringify(_authData));
         }else{
             setAuthData(undefined);
         }

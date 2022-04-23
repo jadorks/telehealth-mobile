@@ -3,6 +3,8 @@ import CalendarStrip from 'react-native-calendar-strip';
 import { Text, View, TouchableOpacity, StatusBar, Image, FlatList, StyleSheet, Dimensions } from "react-native";
 import { Fonts, Colors, Sizes } from "../../constant/styles";
 import { getDoctor } from "../../api/doctors";
+import { getSlots } from "../../api/bookings";
+import moment from "moment";
 
 const morningSlots = ["8:00", "8:30", "9:00", "9:30", "10:00", "10:30", "11:00", "11:30"];
 
@@ -15,12 +17,10 @@ const { width } = Dimensions.get('screen');
 const TimeSlotScreen = ({ route, navigation }) => {
 
     const image = require("../../assets/images/placeholder/user.png");
-    const name = "Larry Ellison";
-    const experience = 8;
-    const type = "Psychologist";
-    const rating = 4.9;
 
-    const [selectedSlot, setSelectedSlot] = React.useState('');
+    const [appointmentSlots, setAppointmentSlots] = useState([]);
+
+    const [selectedSlot, setSelectedSlot] = React.useState();
 
     const [doctor, setDoctor] = useState({
         bio: '',
@@ -33,18 +33,24 @@ const TimeSlotScreen = ({ route, navigation }) => {
 
     const [book, setBook] = React.useState(false);
 
+    const today = new Date();
+    var gte = today.setHours(0,0,0);
+    var lte = today.setHours(23,59,59);
+
     useEffect(() => {
-        async function loadDoctorInfo(){
+        async function loadPageInfo(){
           if(route.params?.doctorId){
             const doc = await getDoctor(route.params?.doctorId);
+            const slots = await getSlots(new Date(gte), new Date(lte), route.params?.doctorId);
             setDoctor(doc);
+            setAppointmentSlots(slots);
           }
           else{
             navigation.navigate('BottomTabScreen');
           }
         }
     
-        loadDoctorInfo();
+        loadPageInfo();
       }, [])
 
     function doctorInfo() {
@@ -111,7 +117,7 @@ const TimeSlotScreen = ({ route, navigation }) => {
                                 :
                                 { ...Fonts.primaryColor16Regular }
                         }>
-                            {item} {time}
+                            {item}
                         </Text>
                     </View>
                 </TouchableOpacity >
@@ -122,11 +128,11 @@ const TimeSlotScreen = ({ route, navigation }) => {
             <View>
                 <FlatList
                     data={slots}
-                    keyExtractor={(index) => `${index}`}
+                    keyExtractor={(item, index) => `${index}`}
                     renderItem={renderItem}
                     scrollEnabled={false}
                     numColumns={3}
-                    contentContainerStyle={{ paddingHorizontal: Sizes.fixPadding * 2.0 }}
+                    contentContainerStyle={{ paddingHorizontal: Sizes.fixPadding * 2.0, }}
                 />
             </View>
         )
@@ -135,20 +141,20 @@ const TimeSlotScreen = ({ route, navigation }) => {
     const renderItem = ({ item }) => {
         return (
             <TouchableOpacity onPress={() => {
-                setSelectedSlot(`${item} PM`)
+                setSelectedSlot(item)
                 setBook(true)
             }} >
                 <View style={{
-                    backgroundColor: selectedSlot == `${item} PM` ? Colors.primary : 'white',
-                    borderColor: selectedSlot == `${item} PM` ? Colors.primary : '#CDCDCD',
+                    backgroundColor: selectedSlot == item ? Colors.primary : 'white',
+                    borderColor: selectedSlot == item ? Colors.primary : '#CDCDCD',
                     ...styles.slotContainerStyle,
                 }}>
                     <Text style={
-                        (selectedSlot == `${item} PM`) ?
+                        (selectedSlot == item) ?
                             { ...Fonts.white16Regular }
                             :
                             { ...Fonts.primaryColor16Regular }}
-                    >{item} PM</Text>
+                    > {moment(new Date(item.start_time)).format("h:mm A")} </Text>
                 </View>
             </TouchableOpacity>
         )
@@ -158,9 +164,7 @@ const TimeSlotScreen = ({ route, navigation }) => {
         return (
             book ?
                 <View style={styles.bookNowContainerStyle}>
-                    <TouchableOpacity onPress={() => navigation.navigate('Consultation', {
-                        image, name, experience, type, selectedSlot, rating
-                    })}>
+                    <TouchableOpacity onPress={() => navigation.navigate('Consultation', {doctor: doctor, slot: selectedSlot})}>
                         <View style={styles.bookButtonStyle}>
                             <Text style={{ ...Fonts.white20Regular }}>Book now</Text>
                         </View>
@@ -171,7 +175,7 @@ const TimeSlotScreen = ({ route, navigation }) => {
     }
 
     const datesBlacklistFunc = date => {
-        return date.isoWeekday() === 7;
+        return date.isoWeekday() === 7 || date.isoWeekday() === 6;
     }
 
     function calander() {
@@ -189,7 +193,6 @@ const TimeSlotScreen = ({ route, navigation }) => {
                         dateNameStyle={{ color: 'black', fontSize: 15.0 }}
                         highlightDateNameStyle={{ color: 'white', fontSize: 15.0 }}
                         highlightDateNumberStyle={{ color: 'white', fontSize: 17.0 }}
-                        datesBlacklist={datesBlacklistFunc}
                         disabledDateOpacity={0.6}
                         disabledDateNameStyle={{ color: 'gray', fontSize: 15.0 }}
                         disabledDateNumberStyle={{ color: 'gray', fontSize: 17.0, }}
@@ -197,6 +200,10 @@ const TimeSlotScreen = ({ route, navigation }) => {
                         scrollable={true}
                         upperCaseDays={false}
                         styleWeekend={true}
+                        onDateSelected={async (date) => await getTimeSlots(date)}
+                        minDate={moment()}
+                        selectedDate={moment()}
+                        scrollToOnSetSelectedDate={true}
                     />
                 </View>
             </View>
@@ -210,6 +217,14 @@ const TimeSlotScreen = ({ route, navigation }) => {
         )
     }
 
+    async function getTimeSlots(date){
+        var selectedDate = new Date(date.toString());
+        var gte = selectedDate.setHours(0,0,0);
+        var lte = selectedDate.setHours(23,59,59);
+        const slots = await getSlots(new Date(gte), new Date(lte), route.params?.doctorId);
+        setAppointmentSlots(slots);
+    }
+
     return (
         <View style={{ flex: 1, backgroundColor: 'white' }}>
             <StatusBar backgroundColor={Colors.primary} />
@@ -220,23 +235,10 @@ const TimeSlotScreen = ({ route, navigation }) => {
                     {calander()}
                     {divider()}
                     <FlatList
-                        ListHeaderComponent={
-                            <>
-                                {slotsInfo({ image: require("../../assets/images/icons/sunrise.png"), data: morningSlots })}
-                                {slotsTime({ slots: morningSlots, time: 'AM' })}
-                                {slotsInfo({ image: require("../../assets/images/icons/sun.png"), data: afternoonSlots })}
-                            </>
-                        }
-                        data={afternoonSlots}
+                        data={appointmentSlots}
                         renderItem={renderItem}
                         keyExtractor={(index) => `${index}`}
                         numColumns={3}
-                        ListFooterComponent={
-                            <>
-                                {slotsInfo({ image: require("../../assets/images/icons/sun-night.png"), data: eveningSlots })}
-                                {slotsTime({ slots: eveningSlots, time: 'PM' })}
-                            </>
-                        }
                         contentContainerStyle={{
                             paddingHorizontal: Sizes.fixPadding,
                             paddingBottom: book ? Sizes.fixPadding * 8.0 : Sizes.fixPadding * 2.0
@@ -307,7 +309,7 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.lightGray,
         height: 0.90,
         width: '100%',
-        marginBottom: Sizes.fixPadding
+        marginBottom: Sizes.fixPadding * 2.0
     }
 })
 

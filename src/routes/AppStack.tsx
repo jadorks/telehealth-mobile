@@ -32,7 +32,7 @@ export const AppStack = () => {
             <Stack.Screen name="Search" component={SearchScreen} />
             <Stack.Screen name="ViewAll" component={ViewAllScreen} />
             <Stack.Screen name="Specialist" component={SpecialistScreen} options={{headerShown: false}}/>
-            <Stack.Screen name="TimeSlots" component={TimeSlotScreen} />
+            <Stack.Screen name="TimeSlots" component={TimeSlotScreen} options={ {title: 'Book a Consultation'} } />
             <Stack.Screen name="Consultation" component={ConsultaionScreen} />
             <Stack.Screen name="PaymentMethod" component={PaymentMethodScreen} />
             <Stack.Screen name="DoctorProfile" component={DoctorProfileScreen} options={{headerShown: false}}/>
