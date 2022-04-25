@@ -17,7 +17,7 @@ export type AuthData = {
 export type ErrorInfo = {
   error: string;
   status: Number;
-}
+};
 
 export const registerPatient = async (user_data): Promise<AuthData> => {
   const user = await client
@@ -27,12 +27,12 @@ export const registerPatient = async (user_data): Promise<AuthData> => {
       return _data;
     })
     .catch((error) => {
-      if(error.response){
+      if (error.response) {
         console.log(error.response.data);
-      } else if(error.request){
+      } else if (error.request) {
         console.log(error.request);
       } else {
-        console.log('Error', error.messsage)
+        console.log("Error", error.messsage);
       }
       return null;
     });
@@ -48,14 +48,35 @@ export const loginPatient = async (user_data): Promise<AuthData> => {
       return _data;
     })
     .catch((error) => {
-      if(error.response){
+      if (error.response) {
         console.log(error.response.data);
-      } else if(error.request){
+      } else if (error.request) {
         console.log(error.request);
       } else {
-        console.log('Error', error.messsage)
+        console.log("Error", error.messsage);
       }
       return null;
     });
   return user;
+};
+
+export const currentPatient = async (token) => {
+  const patient = await client
+    .get("users/current_patient", {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    .then((res) => {
+      return res.data;
+    })
+    .catch((error) => {
+      if (error.response) {
+        console.log(error.response.data);
+      } else if (error.request) {
+        console.log(error.request);
+      } else {
+        console.log("Error", error.messsage);
+      }
+      return null;
+    });
+    return patient;
 };

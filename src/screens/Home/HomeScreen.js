@@ -15,10 +15,15 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { Fonts, Colors, Sizes } from "../../constant/styles";
 import RBSheet from "react-native-raw-bottom-sheet";
+import { useAuth } from "../../context/Auth";
+import { getBookings } from "../../api/bookings";
+import { useFocusEffect } from "@react-navigation/native";
+import moment from "moment";
 
 const { width } = Dimensions.get("window");
 
 const HomeScreen = ({ navigation }) => {
+
   const specialistsList = [
     {
       id: "1",
@@ -95,6 +100,19 @@ const HomeScreen = ({ navigation }) => {
       image: require("../../assets/images/lab/lab_6.jpg"),
     },
   ];
+
+  const {patientInfo, signOut} = useAuth();
+  const [bookings, setBookings] = useState([]);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      async function loadAppointments() {
+          const _bookings = await getBookings(patientInfo?.id);
+          setBookings(_bookings.slice(0,3));
+        }
+        loadAppointments();
+    }, [])
+)
 
   function search() {
     return (
@@ -279,16 +297,12 @@ const HomeScreen = ({ navigation }) => {
     <TouchableOpacity
       activeOpacity={0.9}
       onPress={() =>
-        navigation.navigate("LabTestAndCheckUp", {
-          image: item.image,
-          name: item.labName,
-          address: item.labAddress,
-        })
+        navigation.navigate("BookingInformation", {booking: item})
       }
       style={styles.labAndCheckUpContainer}
     >
       <Image
-        source={item.image}
+        source={require('../../assets/images/placeholder/user.png')}
         style={{
           height: 199.0,
           width: width - 230.0,
@@ -296,23 +310,23 @@ const HomeScreen = ({ navigation }) => {
           borderBottomLeftRadius: Sizes.fixPadding + 5.0,
           overflow: "hidden",
         }}
-        resizeMode="cover"
+        resizeMode="contain"
       />
       <View style={styles.labInformationContainer}>
         <Text numberOfLines={3} style={{ ...Fonts.black16Bold }}>
-          Dr Brown
+          {`${item.doctor.doctor.first_name} ${item.doctor.doctor.last_name}`}
         </Text>
         <Text
           numberOfLines={1}
           style={{ ...Fonts.grayBold, marginTop: Sizes.fixPadding - 5.0 }}
         >
-          15th May, 2022
+          {moment(item.booking_slot.start_time).format("MMM Do, YYYY")}
         </Text>
         <Text
           numberOfLines={1}
           style={{ ...Fonts.grayBold, marginTop: Sizes.fixPadding - 5.0 }}
         >
-          08:30
+          {moment(item.booking_slot.start_time).format("h:mm A")}
         </Text>
       </View>
       <View
@@ -329,17 +343,14 @@ const HomeScreen = ({ navigation }) => {
 
   function header() {
     const refRBSheet = useRef();
-    const [city, setCity] = useState("Wallington");
-    const cityList = ["Wallingtone", "Central Park", "Nerobi"];
-
     return (
       <View style={styles.headerStyle}>
         <TouchableOpacity onPress={() => refRBSheet.current.open()}>
           <RBSheet
             ref={refRBSheet}
             closeOnDragDown={true}
-            closeOnPressMask={false}
-            height={200}
+            closeOnPressMask={true}
+            height={160}
             openDuration={250}
             customStyles={{
               container: {
@@ -349,13 +360,11 @@ const HomeScreen = ({ navigation }) => {
           >
             <View>
               <Text style={{ ...Fonts.black20Bold, alignSelf: "center" }}>
-                Choose City
+                Quick Actions
               </Text>
-              {cityList.map((city) => (
-                <TouchableOpacity
-                  key={city}
+              <TouchableOpacity
                   onPress={() => {
-                    setCity(city);
+                    navigation.navigate("RecordList")
                     refRBSheet.current.close();
                   }}
                 >
@@ -365,15 +374,29 @@ const HomeScreen = ({ navigation }) => {
                       marginVertical: Sizes.fixPadding,
                     }}
                   >
-                    {city}
+                    Medical Records
                   </Text>
                 </TouchableOpacity>
-              ))}
+                <TouchableOpacity
+                  onPress={() => {
+                    signOut();
+                    refRBSheet.current.close();
+                  }}
+                >
+                  <Text
+                    style={{
+                      ...Fonts.black16Regular,
+                      marginVertical: Sizes.fixPadding,
+                    }}
+                  >
+                    Log out
+                  </Text>
+                </TouchableOpacity>
             </View>
           </RBSheet>
           <View style={{ flexDirection: "row", alignItems: "center" }}>
             <Text style={{ ...Fonts.black18Regular, marginLeft: 0 }}>
-              Welcome, {city}
+              Welcome, {patientInfo?.patient.first_name}
             </Text>
           </View>
         </TouchableOpacity>
@@ -395,7 +418,7 @@ const HomeScreen = ({ navigation }) => {
       {title({ title: "Upcoming Consultations" })}
       <FlatList
         ListHeaderComponent={<></>}
-        data={labAndCheckUpList}
+        data={bookings}
         keyExtractor={(item) => `${item.id}`}
         renderItem={renderItem}
         showsVerticalScrollIndicator={false}

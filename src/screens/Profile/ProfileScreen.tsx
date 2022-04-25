@@ -15,17 +15,18 @@ const ProfileScreen = ({ navigation }) => {
 
     const [isLogout, setIsLogout] = useState(false);
     const auth = useAuth();
+    const patientInfo = auth.patientInfo;
 
     function userInfo() {
         return (
             <View style={styles.profileInfoContainerStyle}>
                 <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
-                    <Image source={require('../../assets/images/user/user_3.jpg')}
+                    <Image source={require('../../assets/images/placeholder/user.png')}
                         style={{ height: 55.0, width: 55.0, borderRadius: 27.0 }}
                         resizeMode="contain"
                     />
                     <Text style={{ ...Fonts.black22Bold, marginLeft: Sizes.fixPadding }}>
-                        Ellison Perry
+                        {`${patientInfo.patient.first_name} ${patientInfo.patient.last_name}`}
                     </Text>
                 </View>
 
@@ -133,24 +134,14 @@ const ProfileScreen = ({ navigation }) => {
             {userInfo()}
             {divider()}
             {title({ title: 'Account Info' })}
-            <TouchableOpacity activeOpacity={0.9} onPress={() => navigation.navigate('PatientDirectory')}>
+            <TouchableOpacity activeOpacity={0.9} onPress={() => navigation.navigate('RecordList')}>
                 {infoAll(
                     {
-                        icon: <FontAwesome5 name="clipboard-list" size={20} color='#F44336' />,
-                        backColor: '#FDE3E1',
-                        frontColor: '#F44336',
+                        icon: <FontAwesome5 name="clipboard-list" size={20} color='#42B1A6' />,
+                        backColor: '#D9EFED',
+                        frontColor: '#42B1A6',
                         title: 'Medical Records',
 
-                    }
-                )}
-            </TouchableOpacity>
-            <TouchableOpacity activeOpacity={0.9} onPress={() => navigation.navigate('AboutUs')}>
-                {infoAll(
-                    {
-                        icon: <MaterialCommunityIcons name="hand-pointing-up" size={29} color={Colors.primary} />,
-                        backColor: '#E9EBFE',
-                        frontColor: Colors.primary,
-                        title: 'About',
                     }
                 )}
             </TouchableOpacity>
@@ -160,9 +151,9 @@ const ProfileScreen = ({ navigation }) => {
             >
                 {infoAll(
                     {
-                        icon: <Ionicons name="log-in-outline" size={29} color='#42B1A6' />,
-                        backColor: '#D9EFED',
-                        frontColor: '#42B1A6',
+                        icon: <Ionicons name="log-out-outline" size={29} color='#F44336' />,
+                        backColor: '#FDE3E1',
+                        frontColor: '#F44336',
                         title: 'Logout',
                     }
                 )}

@@ -47,6 +47,7 @@ export const Fonts = {
 export const Colors = {
     primary: '#0094c4',
     lightGray: '#DBDBDB',
+    danger: '#dc3545'
 }
 
 export const Sizes = {

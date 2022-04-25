@@ -5,6 +5,12 @@ import { Fonts, Colors, Sizes } from "../constant/styles";
 import { Entypo } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import Dialog from "react-native-dialog";
+import { Button } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import moment from "moment";
+
+
+
 
 const pastDataList = [
     {
@@ -115,7 +121,9 @@ const CancelledAppointmentScreen = () => {
 
 const { width } = Dimensions.get('screen');
 
-export default TabBarScreen = () => {
+export default TabBarScreen = (bookings) => {
+
+    const navigation = useNavigation();
 
     const [activeDataList, setActiveDataList] = React.useState([
         {
@@ -147,7 +155,6 @@ export default TabBarScreen = () => {
     const [routes] = React.useState([
         { key: 'first', title: 'Active', },
         { key: 'second', title: 'Past' },
-        { key: 'third', title: 'Cancelled', },
     ]);
 
     const [showModal, setShowModal] = React.useState(false);
@@ -160,8 +167,6 @@ export default TabBarScreen = () => {
                 return <ActiveAppointmentScreen jumpTo={jumpTo} />;
             case 'second':
                 return <PastAppointmentScreen jumpTo={jumpTo} />;
-            case 'third':
-                return <CancelledAppointmentScreen jumpTo={jumpTo} />;
         }
     };
 
@@ -205,35 +210,37 @@ export default TabBarScreen = () => {
 
     const ActiveAppointmentScreen = () => {
         const renderItem = ({ item }) => (
-            <View>
+            <TouchableOpacity
+            onPress={()=>navigation.navigate('BookingInformation', {booking:item})}
+            >
                 <View style={{ flexDirection: 'row', justifyContent: "space-between", marginVertical: Sizes.fixPadding * 2.0 }}>
                     <View style={{ flexDirection: 'row', }}>
                         <View style={styles.activeCircleStyle}>
-                            <Text style={{ textAlign: 'center', color: '#8ECC90', fontSize: 18, }}>{item.date}</Text>
+                            
+                            <Text style={{ textAlign: 'center', color: '#8ECC90', fontSize: 18, }}>{moment(item.booking_slot.start_time).format("MMM Do, YYYY")}</Text>
                         </View>
                         <View style={{ marginLeft: Sizes.fixPadding }}>
-                            <Text style={{ ...Fonts.black18Bold }}>{item.time}</Text>
-                            <Text style={{ marginVertical: 8.0, ...Fonts.black16Regular }}>{item.doctor}</Text>
-                            <Text style={{ ...Fonts.primaryColorRegular }}>{item.type}</Text>
+                            <Text style={{ ...Fonts.black18Bold }}>{moment(item.booking_slot.start_time).format("H:mm A")}</Text>
+                            <Text style={{ marginVertical: 8.0, ...Fonts.black16Regular }}>{`${item.doctor.doctor.first_name} ${item.doctor.doctor.last_name}`}</Text>
+                            <Text style={{ ...Fonts.primaryColorRegular }}>{item.doctor.specialty}</Text>
                         </View>
                     </View>
-                    <Entypo name="cross" size={24} color="black" onPress={() => { setShowModal(true); setId(item.id); }} />
                 </View>
                 <View style={{ backgroundColor: Colors.lightGray, height: 0.50, }}>
                 </View>
                 {showDialog()}
-            </View>
+            </TouchableOpacity>
         )
 
         return (
-            activeDataList.length === 0 ?
+            bookings.bookings.length === 0 ?
                 <View style={styles.noActiveDataContainerStyle}>
                     <FontAwesome5 name="calendar-alt" size={70} color='gray' />
                     <Text style={{ ...Fonts.gray17Regular, marginTop: Sizes.fixPadding * 2.0 }}>No Active Appointments</Text>
                 </View> :
                 <View style={{ flex: 1, backgroundColor: 'white', marginHorizontal: Sizes.fixPadding * 2.0, }}>
                     <FlatList
-                        data={activeDataList}
+                        data={bookings.bookings}
                         keyExtractor={(item) => `${item.id}`}
                         renderItem={renderItem}
                     />
@@ -251,7 +258,7 @@ export default TabBarScreen = () => {
                 <TabBar
                     {...props}
                     indicatorStyle={{ backgroundColor: '#2497F3', }}
-                    tabStyle={{ width: layout.width / 3, }}
+                    tabStyle={{ width: layout.width / 2, }}
                     scrollEnabled={true}
                     style={{ backgroundColor: 'white' }}
                     renderLabel={({ route, focused, color }) => (
@@ -265,11 +272,8 @@ export default TabBarScreen = () => {
                             }}>
 
                                 {route.title == 'Active' ?
-                                    <Text style={{ ...Fonts.whiteRegular }}>{activeDataList.length}</Text> :
-                                    route.title == 'Past' ?
-                                        <Text style={{ ...Fonts.whiteRegular }}>{pastDataList.length}</Text> :
-                                        <Text style={{ ...Fonts.whiteRegular }}>{cancelledDataList.length}</Text>
-                                }
+                                    <Text style={{ ...Fonts.whiteRegular }}>{bookings.bookings.length}</Text> :
+                                        <Text style={{ ...Fonts.whiteRegular }}>{pastDataList.length}</Text>}
                             </View>
                         </View>
                     )}

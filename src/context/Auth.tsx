@@ -2,10 +2,11 @@ import React, {createContext, useState, useContext, useEffect} from 'react';
 import * as SecureStore from 'expo-secure-store';
 import * as Font from "expo-font";
 
-import { AuthData, loginPatient, registerPatient } from '../api/authentication';
+import { AuthData, currentPatient, loginPatient, registerPatient } from '../api/authentication';
 
 type AuthContextData = {
     authData?: AuthData;
+    patientInfo?: any;
     loading: boolean;
     signIn(user_data): Promise<void>;
     signUp(user_data): Promise<void>;
@@ -18,6 +19,7 @@ const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 const AuthProvider: React.FC = ({children}) => {
 
     const [authData, setAuthData] = useState<AuthData>();
+    const [patientInfo, setPatientInfo] = useState();
 
     const [loading, setLoading] = useState(true);
 
@@ -28,9 +30,12 @@ const AuthProvider: React.FC = ({children}) => {
     async function loadStorageData(): Promise<void> {
         try{
             const authDataSerialized = await SecureStore.getItemAsync('AuthData');
-            if(authDataSerialized){
+            const patientInfoSerialized = await SecureStore.getItemAsync('PatientInfo');
+            if(authDataSerialized && patientInfoSerialized){
                 const _authData: AuthData = JSON.parse(authDataSerialized);
+                const _patientInfo = JSON.parse(patientInfoSerialized);
                 setAuthData(_authData);
+                setPatientInfo(_patientInfo);
             }
         } catch (error) {
 
@@ -49,8 +54,13 @@ const AuthProvider: React.FC = ({children}) => {
         if(_authData){
             setAuthData(_authData);
             await SecureStore.setItemAsync('AuthData', JSON.stringify(_authData));
+
+            const patientData = await currentPatient(_authData.access_token);
+            setPatientInfo(patientData);
+            await SecureStore.setItemAsync('PatientInfo', JSON.stringify(patientData));
         }else{
-            setAuthData(undefined)
+            setAuthData(undefined);
+            setPatientInfo(undefined);
         }
         
     }
@@ -60,18 +70,26 @@ const AuthProvider: React.FC = ({children}) => {
         if(_authData){
             setAuthData(_authData);
             await SecureStore.setItemAsync('AuthData', JSON.stringify(_authData));
+            
+            const patientData = await currentPatient(_authData.access_token);
+            setPatientInfo(patientData);
+            await SecureStore.setItemAsync('PatientInfo', JSON.stringify(patientData));
+            
         }else{
             setAuthData(undefined);
+            setPatientInfo(undefined);
         }
     }
 
     const signOut = async () => {
         setAuthData(undefined);
+        setPatientInfo(undefined);
         await SecureStore.deleteItemAsync('AuthData');
+        await SecureStore.deleteItemAsync('PatientInfo');
     };
 
     return(
-        <AuthContext.Provider value={{authData, loading, signIn, signUp, signOut}}>
+        <AuthContext.Provider value={{authData, patientInfo, loading, signIn, signUp, signOut}}>
             {children}
         </AuthContext.Provider>
     );

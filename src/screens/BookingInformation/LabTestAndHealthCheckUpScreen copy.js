@@ -31,9 +31,9 @@ const facilitiesList = [
 
 const LabTestAndHealthCheckUpScreen = ({ navigation }) => {
 
-    const image = navigation.getParam('image');
-    const name = navigation.getParam('name');
-    const address = navigation.getParam('address');
+    const image = require('../../assets/images/placeholder/user.png');
+    const name = "Peter";
+    const address = "Address";
 
     function labInfo() {
         return (

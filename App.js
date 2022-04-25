@@ -12,7 +12,7 @@ import ConsultaionScreen from './src/screens/ConsultationDetail/ConsultationDeta
 import PaymentMethodScreen from './src/screens/PaymentMethod/PaymentMethodScreen';
 import DoctorProfileScreen from './src/screens/DoctorProfile/DoctorProfileScreen';
 import ReviewScreen from './src/screens/Review/ReviewScreen';
-import LabTestAndHealthCheckUpScreen from './src/screens/LabAndTestCheckup/LabTestAndHealthCheckUpScreen';
+import BookingInformationScreen from './src/screens/BookingInformation/BookingInformationScreen';
 import MessageScreen from './src/screens/Message/MessageScreen';
 import EditProfileScreen from './src/screens/EditProfile/EditProfileScreen';
 import PatientDirectoryScreen from './src/screens/PatientDirectory/PatientDirectoryScreen';
@@ -54,7 +54,7 @@ const navigator = createAppContainer(
       PaymentMethod: PaymentMethodScreen,
       DoctorProfile: DoctorProfileScreen,
       Review: ReviewScreen,
-      LabTestAndCheckUp: LabTestAndHealthCheckUpScreen,
+      LabTestAndCheckUp: BookingInformationScreen,
       Message: MessageScreen,
       EditProfile: EditProfileScreen,
       PatientDirectory: PatientDirectoryScreen,

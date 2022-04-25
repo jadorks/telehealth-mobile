@@ -13,17 +13,11 @@ const { width } = Dimensions.get('screen');
 const ConsultaionScreen = ({ route, navigation }) => {
 
     const image = require("../../assets/images/doctor/doctor-1.png");
-    const name = "Larry Ellison";
-    const experience = 8;
-    const type = "Psychologist";
-    const slot = '';
-    const rating = 4.8;
-
     const doctor = route.params?.doctor;
-    const sslot = route.params?.slot;
+    const slot = route.params?.slot;
 
     console.log(doctor);
-    console.log(sslot);
+    console.log(slot);
 
     const patientLit = [
         {
@@ -160,9 +154,9 @@ const ConsultaionScreen = ({ route, navigation }) => {
         {divider()}
         {dateAndTime()}
         {divider()}
-        {appintmentText()}
-        {patients()}
-        {addPatient()}
+        {/* {appintmentText()} */}
+        {/* {patients()} */}
+        {/* {addPatient()} */}
         {confirmPayButton()}
     </View>
 }

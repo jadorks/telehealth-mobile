@@ -1,15 +1,8 @@
 import { client } from "./utilities/client";
 
-export const getSlots = async (start_gte, start_lte, doctor) => {
-  const slots = await client
-    .get("bookings/slots", {
-      params: {
-        start_gte: start_gte,
-        start_lte: start_lte,
-        doctor: doctor,
-        status: "OP",
-      },
-    })
+export const getRecords = async (patient) => {
+  const records = await client
+    .get("records", { params: { patient: patient } })
     .then((res) => {
       return res.data;
     })
@@ -24,12 +17,12 @@ export const getSlots = async (start_gte, start_lte, doctor) => {
       return [];
     });
 
-  return slots;
+  return records;
 };
 
-export const getBookings = async (patient) => {
-  const bookings = await client
-    .get("bookings", { params: { patient: patient } })
+export const getRecord = async (record_id) => {
+  const records = await client
+    .get(`records/${record_id}`)
     .then((res) => {
       return res.data;
     })
@@ -41,15 +34,17 @@ export const getBookings = async (patient) => {
       } else {
         console.log("Error", error.messsage);
       }
-      return [];
+      return {};
     });
 
-  return bookings;
+  return records;
 };
 
-export const createBooking = async (booking_info) => {
-  const addedBooking = await client
-    .post("bookings/", booking_info)
+export const updateRecord = async (record_id, record_data, token) => {
+  const updatedRecord = await client
+    .put(`records/${record_id}`, record_data, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
     .then((res) => {
       console.log(res.data);
       return true;
@@ -64,13 +59,12 @@ export const createBooking = async (booking_info) => {
       }
       return false;
     });
-
-  return addedBooking;
+  return updatedRecord;
 };
 
-export const deleteBooking = async (booking_id) => {
-  const deletedBooking = await client
-    .delete(`bookings/${booking_id}`)
+export const deleteRecord =async (record_id) => {
+    const deletedRecord = await client
+    .delete(`records/${record_id}`)
     .then((res) => {
       console.log(res.data);
       return true;
@@ -85,5 +79,5 @@ export const deleteBooking = async (booking_id) => {
       }
       return false;
     });
-    return deletedBooking;
-};
+    return deletedRecord;
+}

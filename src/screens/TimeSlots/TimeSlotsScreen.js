@@ -1,16 +1,12 @@
 import React, {useEffect, useState} from "react";
 import CalendarStrip from 'react-native-calendar-strip';
-import { Text, View, TouchableOpacity, StatusBar, Image, FlatList, StyleSheet, Dimensions } from "react-native";
+import { Text, View, TouchableOpacity, StatusBar, Image, FlatList, StyleSheet, Dimensions, Alert } from "react-native";
 import { Fonts, Colors, Sizes } from "../../constant/styles";
 import { getDoctor } from "../../api/doctors";
-import { getSlots } from "../../api/bookings";
+import { createBooking, getSlots } from "../../api/bookings";
 import moment from "moment";
+import { useAuth } from "../../context/Auth";
 
-const morningSlots = ["8:00", "8:30", "9:00", "9:30", "10:00", "10:30", "11:00", "11:30"];
-
-const afternoonSlots = ["12:30", "1:00", "1:30", "2:00", "2:30", "3:00", "3:30", "4:00", "4:30", "5:00", "5:30", "6:00"]
-
-const eveningSlots = ["8:00", "8:30", "9:00", "9:30", "10:00", "10:30"];
 
 const { width } = Dimensions.get('screen');
 
@@ -23,6 +19,7 @@ const TimeSlotScreen = ({ route, navigation }) => {
     const [selectedSlot, setSelectedSlot] = React.useState();
 
     const [doctor, setDoctor] = useState({
+        id: '',
         bio: '',
         doctor: {
           first_name: '',
@@ -32,6 +29,8 @@ const TimeSlotScreen = ({ route, navigation }) => {
       });
 
     const [book, setBook] = React.useState(false);
+
+    const { patientInfo } = useAuth();
 
     const today = new Date();
     var gte = today.setHours(0,0,0);
@@ -52,6 +51,24 @@ const TimeSlotScreen = ({ route, navigation }) => {
     
         loadPageInfo();
       }, [])
+
+    const addBooking = async () => {
+        console.log(patientInfo)
+        const booking_info = {
+            description: "",
+            patient: patientInfo?.id,
+            doctor: doctor.id,
+            booking_slot: selectedSlot.id
+        }
+        const bookingCreated = await createBooking(booking_info);
+        if(bookingCreated){
+            console.log("Added booking successfully");
+            navigation.popToTop();
+        }else{
+            console.log("Booking failed to add");
+        }
+
+    }
 
     function doctorInfo() {
 
@@ -82,6 +99,26 @@ const TimeSlotScreen = ({ route, navigation }) => {
                 </View>
             </View>
         )
+    }
+
+    const confirmBookingAlert = () => {
+        return(
+            Alert.alert(
+                "Booking Confirmation",
+                `Do you want to book a consultation with ${doctor.doctor?.first_name} ${doctor.doctor?.last_name} for ${moment(new Date(selectedSlot.start_time)).format("DD/MM/YYYY [at] h:mm A")}?`,
+                [
+                    {
+                        text: "Cancel",
+                        onPress: () => console.log("Cancel Pressed"),
+                        style: "cancel"
+                    },
+                    {
+                        text: "Confirm",
+                        onPress: () => addBooking()
+                    }
+                ]
+            )
+        );
     }
 
     function slotsInfo({ image, data }) {
@@ -164,7 +201,7 @@ const TimeSlotScreen = ({ route, navigation }) => {
         return (
             book ?
                 <View style={styles.bookNowContainerStyle}>
-                    <TouchableOpacity onPress={() => navigation.navigate('Consultation', {doctor: doctor, slot: selectedSlot})}>
+                    <TouchableOpacity onPress={confirmBookingAlert}>
                         <View style={styles.bookButtonStyle}>
                             <Text style={{ ...Fonts.white20Regular }}>Book now</Text>
                         </View>
