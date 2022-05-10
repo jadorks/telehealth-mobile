@@ -27,9 +27,9 @@ export const getSlots = async (start_gte, start_lte, doctor) => {
   return slots;
 };
 
-export const getBookings = async (patient) => {
+export const getBookings = async (patient, status) => {
   const bookings = await client
-    .get("bookings", { params: { patient: patient } })
+    .get("bookings", { params: { patient: patient, status:status } })
     .then((res) => {
       return res.data;
     })

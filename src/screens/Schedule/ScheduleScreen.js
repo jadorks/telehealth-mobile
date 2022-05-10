@@ -10,16 +10,19 @@ const ScheduleScreen = () => {
   const { patientInfo } = useAuth();
 
   const [bookings, setBookings] = useState([]);
+  const [pastBookings, setPastBookings] = useState([]);
 
   useFocusEffect(
-      React.useCallback(() => {
-        async function loadAppointments() {
-            const _bookings = await getBookings(patientInfo?.id);
-            setBookings(_bookings);
-          }
-          loadAppointments();
-      }, [])
-  )
+    React.useCallback(() => {
+      async function loadAppointments() {
+        const _bookings = await getBookings(patientInfo?.id, "PE");
+        const _pastBookings = await getBookings(patientInfo?.id, "CO");
+        setBookings(_bookings);
+        setPastBookings(_pastBookings);
+      }
+      loadAppointments();
+    }, [])
+  );
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
@@ -33,7 +36,7 @@ const ScheduleScreen = () => {
           Appointments
         </Text>
       </View>
-      <TabBarScreen bookings={bookings} />
+      <TabBarScreen bookings={bookings} pastBookings={pastBookings} />
     </SafeAreaView>
   );
 };

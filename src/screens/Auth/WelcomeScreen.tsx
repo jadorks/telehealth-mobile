@@ -12,7 +12,6 @@ import {
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Fonts, Sizes } from "../../constant/styles";
-import IntlPhoneInput from "react-native-intl-phone-input";
 import { useAuth } from "../../context/Auth";
 
 const WelcomeScreen = ({ navigation }) => {
@@ -42,7 +41,7 @@ const WelcomeScreen = ({ navigation }) => {
           Welcome back
         </Text>
         <Text style={{ ...Fonts.white16Regular, marginTop: Sizes.fixPadding }}>
-          Login in your account
+          Login. Use your account
         </Text>
         <View
           style={{
@@ -98,25 +97,6 @@ const WelcomeScreen = ({ navigation }) => {
           >
             {" "}
             Sign Up
-          </Text>
-        </Text>
-        <Text
-          style={{
-            ...Fonts.white16Regular,
-            textAlign: "center",
-            marginTop: Sizes.fixPadding * 2.0,
-          }}
-        >
-          Forgot Password?
-          <Text
-            style={{
-              ...Fonts.white16Regular,
-              color: "#6fedfc",
-            }}
-            onPress={() => navigation.navigate("Register")}
-          >
-            {" "}
-            Reset
           </Text>
         </Text>
         <TouchableOpacity

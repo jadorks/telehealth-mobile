@@ -19,6 +19,8 @@ import SplashScreen from '../screens/SplashScreen';
 import LoadingScreen from '../components/LoadingScreen';
 import RecordListScreen from '../screens/Records/RecordList';
 import RecordDetailScreen from '../screens/Records/RecordDetail';
+import QuestionScreen from '../screens/SymptomChecker/QuestionScreen';
+import SymptomInputScreen from '../screens/SymptomChecker/SymptomInputScreen';
 
 
 
@@ -46,6 +48,8 @@ export const AppStack = () => {
             <Stack.Screen name="PatientDirectory" component={PatientDirectoryScreen} />
             <Stack.Screen name="AboutUs" component={AboutUsScreen} />
             <Stack.Screen name="RecordDetail" component={RecordDetailScreen} options={{title: 'Record Details'}} />
+            <Stack.Screen name="Questions" component={QuestionScreen} />
+            <Stack.Screen name="SymptomInput" component={SymptomInputScreen} options={{title: 'Symptom Input'}}/>
         </Stack.Navigator>
     )
 };

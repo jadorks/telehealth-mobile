@@ -19,11 +19,11 @@ import { useAuth } from "../../context/Auth";
 import { getBookings } from "../../api/bookings";
 import { useFocusEffect } from "@react-navigation/native";
 import moment from "moment";
+import { FontAwesome5 } from "@expo/vector-icons";
 
 const { width } = Dimensions.get("window");
 
 const HomeScreen = ({ navigation }) => {
-
   const specialistsList = [
     {
       id: "1",
@@ -101,18 +101,18 @@ const HomeScreen = ({ navigation }) => {
     },
   ];
 
-  const {patientInfo, signOut} = useAuth();
+  const { patientInfo, signOut } = useAuth();
   const [bookings, setBookings] = useState([]);
 
   useFocusEffect(
     React.useCallback(() => {
       async function loadAppointments() {
-          const _bookings = await getBookings(patientInfo?.id);
-          setBookings(_bookings.slice(0,3));
-        }
-        loadAppointments();
+        const _bookings = await getBookings(patientInfo?.id, "PE");
+        setBookings(_bookings.slice(0, 3));
+      }
+      loadAppointments();
     }, [])
-)
+  );
 
   function search() {
     return (
@@ -150,28 +150,27 @@ const HomeScreen = ({ navigation }) => {
 
   function title({ title }) {
     return (
-        <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-            <Text
-                style={{
-                ...Fonts.black18Bold,
-                marginVertical: Sizes.fixPadding,
-                marginHorizontal: Sizes.fixPadding * 2.0,
-                }}
-            >
-                {title}
-            </Text>
-            <Text
-                onPress={()=> navigation.navigate('Schedule')}
-                style={{
-                ...Fonts.primaryColorBold,
-                marginVertical: Sizes.fixPadding * 1.3,
-                marginHorizontal: Sizes.fixPadding * 2.0,
-                }}
-            >
-                View All
-            </Text>
-        </View>
-
+      <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+        <Text
+          style={{
+            ...Fonts.black18Bold,
+            marginVertical: Sizes.fixPadding,
+            marginHorizontal: Sizes.fixPadding * 2.0,
+          }}
+        >
+          {title}
+        </Text>
+        <Text
+          onPress={() => navigation.navigate("Schedule")}
+          style={{
+            ...Fonts.primaryColorBold,
+            marginVertical: Sizes.fixPadding * 1.3,
+            marginHorizontal: Sizes.fixPadding * 2.0,
+          }}
+        >
+          View All
+        </Text>
+      </View>
     );
   }
 
@@ -224,10 +223,21 @@ const HomeScreen = ({ navigation }) => {
           marginBottom: Sizes.fixPadding * 3.0,
         }}
       >
-        <TouchableOpacity style={[styles.circleContainer, styles.boxShadow]} onPress={() => console.log('pressed')}>
-            <Image source={require('../../assets/images/symptom_checker/symp1.png')} style={{width:'40%', height: '40%', justifyContent: 'center', alignItems: 'center'}}/>
-            <Text style={{ ...Fonts.black18Regular }}>Symptom</Text>
-            <Text style={{ ...Fonts.black18Regular }}>Checker</Text>
+        <TouchableOpacity
+          style={[styles.circleContainer, styles.boxShadow]}
+          onPress={() => navigation.navigate("SymptomInput")}
+        >
+          <Image
+            source={require("../../assets/images/symptom_checker/symp1.png")}
+            style={{
+              width: "40%",
+              height: "40%",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          />
+          <Text style={{ ...Fonts.black18Regular }}>Symptom</Text>
+          <Text style={{ ...Fonts.black18Regular }}>Checker</Text>
         </TouchableOpacity>
       </View>
     );
@@ -297,12 +307,12 @@ const HomeScreen = ({ navigation }) => {
     <TouchableOpacity
       activeOpacity={0.9}
       onPress={() =>
-        navigation.navigate("BookingInformation", {booking: item})
+        navigation.navigate("BookingInformation", { booking: item })
       }
       style={styles.labAndCheckUpContainer}
     >
       <Image
-        source={require('../../assets/images/placeholder/user.png')}
+        source={require("../../assets/images/placeholder/user.png")}
         style={{
           height: 199.0,
           width: width - 230.0,
@@ -363,35 +373,35 @@ const HomeScreen = ({ navigation }) => {
                 Quick Actions
               </Text>
               <TouchableOpacity
-                  onPress={() => {
-                    navigation.navigate("RecordList")
-                    refRBSheet.current.close();
+                onPress={() => {
+                  navigation.navigate("RecordList");
+                  refRBSheet.current.close();
+                }}
+              >
+                <Text
+                  style={{
+                    ...Fonts.black16Regular,
+                    marginVertical: Sizes.fixPadding,
                   }}
                 >
-                  <Text
-                    style={{
-                      ...Fonts.black16Regular,
-                      marginVertical: Sizes.fixPadding,
-                    }}
-                  >
-                    Medical Records
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => {
-                    signOut();
-                    refRBSheet.current.close();
+                  Medical Records
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  signOut();
+                  refRBSheet.current.close();
+                }}
+              >
+                <Text
+                  style={{
+                    ...Fonts.black16Regular,
+                    marginVertical: Sizes.fixPadding,
                   }}
                 >
-                  <Text
-                    style={{
-                      ...Fonts.black16Regular,
-                      marginVertical: Sizes.fixPadding,
-                    }}
-                  >
-                    Log out
-                  </Text>
-                </TouchableOpacity>
+                  Log out
+                </Text>
+              </TouchableOpacity>
             </View>
           </RBSheet>
           <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -416,13 +426,36 @@ const HomeScreen = ({ navigation }) => {
       {header()}
       {circleSymptomChecker()}
       {title({ title: "Upcoming Consultations" })}
-      <FlatList
-        ListHeaderComponent={<></>}
-        data={bookings}
-        keyExtractor={(item) => `${item.id}`}
-        renderItem={renderItem}
-        showsVerticalScrollIndicator={false}
-      />
+
+      {bookings.length === 0 ? (
+        <View style={styles.noActiveDataContainerStyle}>
+          <Text
+            style={{
+              ...Fonts.gray17Regular,
+              marginBottom: Sizes.fixPadding * 2.0,
+            }}
+          >
+            No Upcoming Appointments
+          </Text>
+          <FontAwesome5 name="calendar-alt" size={70} color="gray" />
+          <Text
+            style={{
+              ...Fonts.gray17Regular,
+              marginTop: Sizes.fixPadding * 2.0,
+            }}
+          >
+            Go to the doctors screen to book one
+          </Text>
+        </View>
+      ) : (
+        <FlatList
+          ListHeaderComponent={<></>}
+          data={bookings}
+          keyExtractor={(item) => `${item.id}`}
+          renderItem={renderItem}
+          showsVerticalScrollIndicator={false}
+        />
+      )}
     </SafeAreaView>
   );
 };
@@ -510,7 +543,6 @@ const styles = StyleSheet.create({
     elevation: 5.0,
   },
   circleContainer: {
-
     borderRadius:
       Math.round(
         Dimensions.get("window").width + Dimensions.get("window").height
@@ -520,31 +552,38 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     justifyContent: "center",
     alignItems: "center",
-  }
+  },
+  noActiveDataContainerStyle: {
+    flex: 1,
+    backgroundColor: "white",
+    marginHorizontal: Sizes.fixPadding * 2.0,
+    justifyContent: "center",
+    alignItems: "center",
+  },
 });
 
 const generateBoxShadowStyle = (
-    xOffset,
-    yOffset,
-    shadowColorIos,
-    shadowOpacity,
-    elevation,
-    shadowColorAndroid,
-  ) => {
-    if (Platform.OS === 'ios') {
-      styles.boxShadow = {
-        shadowColor: shadowColorIos,
-        shadowOffset: {width: xOffset, height: yOffset},
-        shadowOpacity,
-      };
-    } else if (Platform.OS === 'android') {
-      styles.boxShadow = {
-        elevation,
-        shadowColor: shadowColorAndroid,
-      };
-    }
-  };
+  xOffset,
+  yOffset,
+  shadowColorIos,
+  shadowOpacity,
+  elevation,
+  shadowColorAndroid
+) => {
+  if (Platform.OS === "ios") {
+    styles.boxShadow = {
+      shadowColor: shadowColorIos,
+      shadowOffset: { width: xOffset, height: yOffset },
+      shadowOpacity,
+    };
+  } else if (Platform.OS === "android") {
+    styles.boxShadow = {
+      elevation,
+      shadowColor: shadowColorAndroid,
+    };
+  }
+};
 
-  generateBoxShadowStyle(0,0,'#acacac', 1,20, '#acacac' )
+generateBoxShadowStyle(0, 0, "#acacac", 1, 20, "#acacac");
 
 export default HomeScreen;

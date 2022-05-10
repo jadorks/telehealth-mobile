@@ -18,19 +18,41 @@ import { FontAwesome } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { getDoctors } from "../../api/doctors";
 import { FontAwesome5 } from "@expo/vector-icons";
+import { useFocusEffect } from "@react-navigation/native";
 
 const { width } = Dimensions.get("screen");
 
 const SpecialistScreen = ({ navigation }) => {
   const [doctorsList, setDoctorsList] = useState([]);
+  const [query, setQuery] = useState("");
+  const [results, setResults] = useState([]);
 
-  useEffect(() => {
-    async function loadDoctors() {
-      const docs = await getDoctors();
-      setDoctorsList(docs);
+  useFocusEffect(
+    React.useCallback(() => {
+      async function loadDoctors() {
+        const docs = await getDoctors();
+        setDoctorsList(docs);
+        setResults(docs);
+      }
+      loadDoctors();
+    }, [])
+  );
+
+  React.useEffect(() => {
+    performSearch();
+  }, [query]);
+
+  const performSearch = () => {
+    if (query.length !== 0) {
+      const searchResults = doctorsList.filter((doctor) => {
+        const fullname = `${doctor?.doctor.first_name} ${doctor?.doctor.last_name}`;
+        return fullname.toLowerCase().includes(query.toLowerCase());
+      });
+      setResults(searchResults);
+    }else{
+      setResults(doctorsList);
     }
-    loadDoctors();
-  }, []);
+  };
 
   function header() {
     return (
@@ -58,6 +80,8 @@ const SpecialistScreen = ({ navigation }) => {
           <TextInput
             placeholder={`Search Doctors`}
             style={{ ...Fonts.gray17Regular, marginLeft: Sizes.fixPadding }}
+            value={query}
+            onChangeText={(v) => setQuery(v)}
           />
         </View>
       </View>
@@ -70,7 +94,9 @@ const SpecialistScreen = ({ navigation }) => {
         <View style={{ justifyContent: "center", marginTop: 15.0 }}>
           <TouchableOpacity
             style={{ flexDirection: "row", alignItems: "center" }}
-            onPress={() => navigation.navigate("DoctorProfile", {doctorId: item.id})}
+            onPress={() =>
+              navigation.navigate("DoctorProfile", { doctorId: item.id })
+            }
           >
             <View style={styles.doctorImageContainerStyle}>
               <Image
@@ -122,7 +148,7 @@ const SpecialistScreen = ({ navigation }) => {
 
     return (
       <FlatList
-        data={doctorsList}
+        data={results}
         keyExtractor={(item) => `${item?.id}`}
         renderItem={renderItem}
         ListEmptyComponent={emptyListComponent}

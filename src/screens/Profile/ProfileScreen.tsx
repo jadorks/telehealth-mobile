@@ -30,9 +30,9 @@ const ProfileScreen = ({ navigation }) => {
                     </Text>
                 </View>
 
-                <TouchableOpacity activeOpacity={0.9} onPress={() => navigation.navigate('EditProfile')}>
+                {/* <TouchableOpacity activeOpacity={0.9} onPress={() => navigation.navigate('EditProfile')}>
                     <Text style={{ ...Fonts.primaryColorBold }}>Edit Profile</Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
 
             </View>
         )

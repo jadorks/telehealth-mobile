@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import { SafeAreaView } from "react-native";
 import {
   Text,
@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   TextInput,
-  ScrollView
+  ScrollView,
 } from "react-native";
 import { Fonts, Colors, Sizes } from "../../constant/styles";
 import MapView, { Marker } from "react-native-maps";
@@ -43,36 +43,22 @@ const facilitiesList = [
   },
 ];
 
-const RecordDetailScreen = ({ route, navigation }) => {
+const SymptomInputScreen = ({ route, navigation }) => {
   const image = require("../../assets/images/placeholder/user.png");
   const name = "Peter";
   const address = "Address";
 
-  const [record, setRecord] = useState();
-
-  useFocusEffect(
-      React.useCallback(() => {
-        async function loadRecord(){
-            const _record = await getRecord(route.params?.recordId);
-            setRecord(_record);
-        }
-        loadRecord();
-      }, [])
-  )
-
-  const booking_id = route.params?.booking?.id;
-  const datetime = route.params?.booking?.booking_slot.start_time;
   // const doctor = route.params?.booking?.doctor;
 
   const recordDelete = async () => {
     const deleted = await deleteRecord(record.id);
-    if(deleted){
+    if (deleted) {
       console.log("deleted record");
       navigation.popToTop();
-    }else{
+    } else {
       console.log("failed to delete");
     }
-  }
+  };
 
   function labInfo() {
     return (
@@ -111,7 +97,8 @@ const RecordDetailScreen = ({ route, navigation }) => {
         style={{
           ...Fonts.primaryColor17Bold,
           marginHorizontal: Sizes.fixPadding * 2.0,
-          marginTop: Sizes.fixPadding * 2.0,
+          marginTop: Sizes.fixPadding * 10.0,
+          textAlign: "center",
         }}
       >
         {title}
@@ -194,152 +181,46 @@ const RecordDetailScreen = ({ route, navigation }) => {
             justifyContent: "center",
             borderRadius: Sizes.fixPadding,
             elevation: 2.0,
-            backgroundColor: Colors.danger,
+            backgroundColor: Colors.primary,
           }}
         >
-          <Text style={{ ...Fonts.white20Regular }}>Delete Record</Text>
+          <Text style={{ ...Fonts.white20Regular }}>Identify Symptoms</Text>
         </TouchableOpacity>
       </View>
     );
   }
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "white", paddingBottom: 75.0 }}>
+    <SafeAreaView
+      style={{ flex: 1, backgroundColor: "white", paddingBottom: 75.0 }}
+    >
       <StatusBar backgroundColor={Colors.primary} />
       <ScrollView>
-      {titleInfo({ title: "Diagnosis" })}
-      <View
-        style={{
-          // backgroundColor: "rgba(255,255,255,0.25)",
-          // opacity: 0.25,
-          borderRadius: 25.0,
-          borderColor: "black",
-          borderWidth: 1,
-          marginTop: Sizes.fixPadding * 1.5,
-          paddingVertical: Sizes.fixPadding + 3.0,
-          paddingHorizontal: 25.0,
-          marginHorizontal: Sizes.fixPadding * 1.5,
-        }}
-      >
-        <TextInput
-          style={{ ...Fonts.black16Regular, color: "black" }}
-          placeholderTextColor="black"
-          editable={false}
-          value={record?.diagnosis}
-        />
-      </View>
-      {titleInfo({ title: "Recommendation" })}
-      <View
-        style={{
-          // backgroundColor: "rgba(255,255,255,0.25)",
-          // opacity: 0.25,
-          borderRadius: 25.0,
-          borderColor: "black",
-          borderWidth: 1,
-          marginTop: Sizes.fixPadding * 1.5,
-          paddingVertical: Sizes.fixPadding + 3.0,
-          paddingHorizontal: 25.0,
-          marginHorizontal: Sizes.fixPadding * 1.5,
-        }}
-      >
-        <TextInput
-          style={{ ...Fonts.black16Regular, color: "black" }}
-          placeholderTextColor="black"
-          editable={false}
-          value={record?.recommendation}
-        />
-      </View>
-      {titleInfo({ title: "Medication" })}
-      <View
-        style={{
-          // backgroundColor: "rgba(255,255,255,0.25)",
-          // opacity: 0.25,
-          borderRadius: 25.0,
-          borderColor: "black",
-          borderWidth: 1,
-          marginTop: Sizes.fixPadding * 1.5,
-          paddingVertical: Sizes.fixPadding + 3.0,
-          paddingHorizontal: 25.0,
-          marginHorizontal: Sizes.fixPadding * 1.5,
-        }}
-      >
-        <TextInput
-          style={{ ...Fonts.black16Regular, color: "black" }}
-          placeholderTextColor="black"
-          editable={false}
-          value={record?.medication}
-        />
-      </View>
-      {titleInfo({ title: "Facial Analysis" })}
-      <View
-        style={{
-          // backgroundColor: "rgba(255,255,255,0.25)",
-          // opacity: 0.25,
-          borderRadius: 25.0,
-          borderColor: "black",
-          borderWidth: 1,
-          marginTop: Sizes.fixPadding * 1.5,
-          paddingVertical: Sizes.fixPadding + 3.0,
-          paddingHorizontal: 25.0,
-          marginHorizontal: Sizes.fixPadding * 1.5,
-        }}
-      >
-        <TextInput
-          style={{ ...Fonts.black16Regular, color: "black" }}
-          placeholderTextColor="black"
-          editable={false}
-          value={record?.face_analysis}
-        />
-      </View>
-      {titleInfo({ title: "Diagnosed by" })}
-      <View
-        style={{
-          // backgroundColor: "rgba(255,255,255,0.25)",
-          // opacity: 0.25,
-          borderRadius: 25.0,
-          borderColor: "black",
-          borderWidth: 1,
-          marginTop: Sizes.fixPadding * 1.5,
-          paddingVertical: Sizes.fixPadding + 3.0,
-          paddingHorizontal: 25.0,
-          marginHorizontal: Sizes.fixPadding * 1.5,
-        }}
-      >
-        <TextInput
-          style={{ ...Fonts.black16Regular, color: "black" }}
-          placeholderTextColor="black"
-          editable={false}
-          value={record ? `${record?.doctor?.doctor?.first_name} ${record?.doctor?.doctor?.last_name}` : ""}
-        />
-      </View>
-      {titleInfo({ title: "Diagnosed at:" })}
-      <View
-        style={{
-          // backgroundColor: "rgba(255,255,255,0.25)",
-          // opacity: 0.25,
-          borderRadius: 25.0,
-          borderColor: "black",
-          borderWidth: 1,
-          marginVertical: Sizes.fixPadding * 1.5,
-          paddingVertical: Sizes.fixPadding + 3.0,
-          paddingHorizontal: 25.0,
-          marginHorizontal: Sizes.fixPadding * 1.5,
-        }}
-      >
-        <TextInput
-          style={{ ...Fonts.black16Regular, color: "black"}}
-          editable={false}
-          value={moment(record?.created_at).format("Do MMM, YYYY [at] h:mm A")}
-        />
-      </View>
+        {titleInfo({
+          title: "Enter your symptoms below to begin the assessment",
+        })}
+        <View
+          style={{
+            borderBottomColor: "#000000",
+            borderBottomWidth: 1,
+          }}
+        >
+          <TextInput
+            style={{ ...Fonts.black16Regular, color: "black", padding:10 }}
+            placeholderTextColor="black"
+            multiline={true}
+            value=""
+            maxLength={40}
+          />
+        </View>
       </ScrollView>
-      
+
       {massageAndCallNowButton()}
     </SafeAreaView>
   );
 };
 
-RecordDetailScreen.navigationOptions = {
+SymptomInputScreen.navigationOptions = {
   title: "Lab tests & health checkup",
   headerTitleStyle: {
     ...Fonts.black20Bold,
@@ -382,4 +263,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default RecordDetailScreen;
+export default SymptomInputScreen;
